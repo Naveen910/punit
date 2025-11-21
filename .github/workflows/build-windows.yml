@@ -1,0 +1,39 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install pip dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller pyserial modbus-tk pywin32 csv2pdf requests
+          pip freeze > requirements.txt
+
+      - name: Build exe with PyInstaller
+        run: |
+          pyinstaller --onefile --name MAIN_LIMS_CSV ^
+            --hidden-import=win32timezone ^
+            --hidden-import=serial ^
+            MAIN_LIMS_CSV.py
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MAIN_LIMS_CSV-windows-exe
+          path: dist/MAIN_LIMS_CSV.exe
