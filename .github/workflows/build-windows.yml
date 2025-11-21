@@ -26,9 +26,9 @@ jobs:
 
       - name: Build exe with PyInstaller
         run: |
-          pyinstaller --onefile --name MAIN_LIMS_CSV ^
-            --hidden-import=win32timezone ^
-            --hidden-import=serial ^
+          pyinstaller --onefile --name MAIN_LIMS_CSV \
+            --hidden-import=win32timezone \
+            --hidden-import=serial \
             MAIN_LIMS_CSV.py
         shell: bash
 
